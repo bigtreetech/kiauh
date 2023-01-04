@@ -205,14 +205,16 @@ function download_mainsail() {
 
   if wget "${url}"; then
     ok_msg "Download complete!"
-    status_msg "Extracting archive ..."
-    unzip -q -o ./*.zip && ok_msg "Done!"
-    status_msg "Remove downloaded archive ..."
-    rm -rf ./*.zip && ok_msg "Done!"
   else
     print_error "Downloading Mainsail from\n ${url}\n failed!"
-    exit 1
+    cp ${KIAUH_SRCDIR}/resources/mainsail-kits/mainsail.zip ./
+    ok_msg "Copy archive mainsail.zip complete!"
   fi
+
+  status_msg "Extracting archive ..."
+  unzip -q -o ./*.zip && ok_msg "Done!"
+  status_msg "Remove downloaded archive ..."
+  rm -rf ./*.zip && ok_msg "Done!"
 
   ### check for moonraker multi-instance and if multi-instance was found, enable mainsails remoteMode
   if [[ $(moonraker_systemd | wc -w) -gt 1 ]]; then
