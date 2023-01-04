@@ -15,15 +15,15 @@ set -e
 #=============== INSTALL Timelapse ===============#
 #=================================================#
 
-function install_Sonar() {
-  local sonar_cfg="${KIAUH_SRCDIR}/resources/mainsail-kits/timelapse.cfg"
+function install_Timelapse() {
+  local timelapse_cfg="${KIAUH_SRCDIR}/resources/mainsail-kits/timelapse.cfg"
 
   local printer_data="${HOME}/printer_data"
   local cfg_dir="${printer_data}/config"
 
   local repo="https://github.com/mainsail-crew/moonraker-timelapse.git"
 
-  ### return early if sonar already exists
+  ### return early if Timelapse already exists
   if [[ -d "${HOME}/moonraker-timelapse" ]]; then
     print_error "Looks like Moonraker-Timelapse is already installed!\n Please remove it first before you try to re-install it!"
     return
@@ -31,8 +31,8 @@ function install_Sonar() {
 
   status_msg "Initializing Moonraker-Timelapse ..."
 
-  ### step 1: clone Sonar
-  status_msg "Cloning Sonar from ${repo} ..."
+  ### step 1: clone Timelapse
+  status_msg "Cloning Timelapse from ${repo} ..."
   [[ -d "${HOME}/moonraker-timelapse" ]] && rm -rf "${HOME}/moonraker-timelapse"
 
   cd "${HOME}" || exit 1
@@ -47,12 +47,12 @@ function install_Sonar() {
   bash ~/moonraker-timelapse/install.sh
   ok_msg "Compiling complete!"
 
-  ### step 4: create sonar config file
+  ### step 4: create Timelapse config file
   [[ ! -d ${cfg_dir} ]] && mkdir -p "${cfg_dir}"
-  [[ -f "${cfg_dir}/sonar.conf" ]] && rm -rf "${cfg_dir}/sonar.conf"
+  [[ -f "${cfg_dir}/timelapse.cfg" ]] && rm -rf "${cfg_dir}/timelapse.cfg"
 
-  status_msg "Creating sonar config file ..."
-  cp ${sonar_cfg} ${cfg_dir}
+  status_msg "Creating Timelapse config file ..."
+  cp ${timelapse_cfg} ${cfg_dir}
 
   ok_msg "Done!"
 }

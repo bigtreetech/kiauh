@@ -111,7 +111,7 @@ function Create_can0_cfg() {
     cat <<-EOF > can0
 	allow-hotplug can0
 	iface can0 can static
-	    bitrate 500000
+	    bitrate 1000000
 	    up ifconfig \$IFACE txqueuelen 1024
 	EOF
 
