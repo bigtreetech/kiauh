@@ -29,6 +29,7 @@ function remove_ui() {
   echo -e "|  5) [KlipperScreen]       | 10) [Telegram Bot]        |"
   echo -e "|                           | 11) [Obico for Klipper]   |"
   echo -e "|                           | 12) [NGINX]               |"
+  echo -e "|                           | 13) [Sonar]               |"
   back_footer
 }
 
@@ -63,6 +64,8 @@ function remove_menu() {
         do_action "remove_moonraker_obico" "remove_ui";;
       12)
         do_action "remove_nginx" "remove_ui";;
+      13)
+        do_action "remove_Sonar" "remove_ui";;
       B|b)
         clear; main_menu; break;;
       *)

@@ -63,6 +63,30 @@ function install_mainsail() {
 #    done
 #  fi
 
+  ### ask user to install Crowsnest
+  local install_Crowsnest
+  if [[ ! -f "${SYSTEMD}/crowsnest.service" ]]; then
+    while true; do
+      echo
+      top_border
+      echo -e "| Install Crowsnest for webcam support?                 |"
+      bottom_border
+      read -p "${cyan}###### Please select (y/N):${white} " yn
+      case "${yn}" in
+        Y|y|Yes|yes)
+          select_msg "Yes"
+          install_Crowsnest="true"
+          break;;
+        N|n|No|no|"")
+          select_msg "No"
+          install_Crowsnest="false"
+          break;;
+        *)
+          error_msg "Invalid command!";;
+      esac
+    done
+  fi
+
   ### download mainsail
   download_mainsail
 
@@ -84,6 +108,9 @@ function install_mainsail() {
 
   ### install mjpg-streamer
 #  [[ ${install_mjpg_streamer} == "true" ]] && install_mjpg-streamer
+
+  ### install Crowsnest
+  [[ ${install_Crowsnest} == "true" ]] && install_Crowsnest
 
   fetch_webui_ports #WIP
 
@@ -136,7 +163,15 @@ function download_mainsail_macros() {
       if [[ ! -f "${path}/mainsail.cfg" ]]; then
         status_msg "Downloading mainsail.cfg to ${path} ..."
         log_info "downloading mainsail.cfg to: ${path}"
-        wget "${ms_cfg}" -O "${path}/mainsail.cfg"
+
+        if wget "${ms_cfg}" -O "${path}/mainsail.cfg"; then
+          ok_msg "Download complete!"
+        else
+          status_msg "Downloading mainsail.cfg failed!"
+          rm "${path}/mainsail.cfg" -f
+          cp ${KIAUH_SRCDIR}/resources/mainsail-kits/mainsail.cfg ${path}/mainsail.cfg
+          ok_msg "Copy archive mainsail.cfg complete!"
+        fi
 
         ### replace user 'pi' with current username to prevent issues in cases where the user is not called 'pi'
         log_info "modify mainsail.cfg"

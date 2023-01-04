@@ -1,0 +1,9 @@
+###########---USB---################
+#----------------------------------#
+KERNEL=="sd[a-z]*", SUBSYSTEM=="block", ACTION=="add", RUN+="/etc/scripts/usb_udev.sh usb %k"
+KERNEL=="sd[a-z]*", SUBSYSTEM=="block", ACTION=="remove", RUN+="/etc/scripts/usb_udev.sh usb %k", OPTIONS="last_rule"
+
+#########--USB camera--#############
+#----------------------------------#
+#KERNEL=="video[1-9]*", ACTION=="add", RUN+="/etc/scripts/usb_udev.sh video %k" 
+#KERNEL=="video[1-9]*", ACTION=="remove", RUN+="/etc/scripts/usb_udev.sh video %k", OPTIONS="last_rule"

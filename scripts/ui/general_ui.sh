@@ -28,6 +28,11 @@ function hr() {
   echo -e "|-------------------------------------------------------|"
 }
 
+function custom_function(){
+    hr
+    echo -e "| ${cyan} BTT Custom ${white}                    ${red}F) Function${white}         |"
+}
+
 function quit_footer() {
   hr
   echo -e "|                        ${red}Q) Quit${white}                        |"

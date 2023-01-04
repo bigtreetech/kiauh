@@ -29,6 +29,11 @@ function install_ui() {
   echo -e "|                          |                            |"
   echo -e "| Touchscreen GUI:         | Webcam Streamer:           |"
   echo -e "|  5) [KlipperScreen]      | 10) [Crowsnest]            |"
+  echo -e "|                          |                            |"
+  echo -e "|                          | Mainsail Kits:             |"
+  echo -e "|                          | 11) [MJPG-Streamer]        |"
+  echo -e "|                          | 12) [Sonar]                |"
+  echo -e "|                          | 13) [Timelapse]            |"
   back_footer
 }
 
@@ -66,6 +71,15 @@ function install_menu() {
         do_action "moonraker_obico_setup_dialog" "install_ui";;
       10) 
         do_action "install_crowsnest" "install_ui";;
+      11)
+        #do_action "install_mjpg-streamer" "install_ui";;
+        clear && print_header
+        print_error "Function currently disabled! Sorry!"
+        install_ui;;
+      12)
+        do_action "install_Sonar" "install_ui";;
+      13)
+        do_action "install_Timelapse" "install_ui";;
       B|b)
         clear; main_menu; break;;
       *)

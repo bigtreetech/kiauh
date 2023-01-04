@@ -33,6 +33,7 @@ function main_ui() {
   echo -e "|                    |         Obico: $(print_status "moonraker_obico")|"
   echo -e "|                    |                                  |"
   echo -e "|  $(print_kiauh_version)|     Octoprint: $(print_status "octoprint")|"
+  custom_function
   quit_footer
 }
 
@@ -134,6 +135,9 @@ function main_menu() {
         main_ui;;
       6)clear && print_header
         settings_menu
+        break;;
+      F|f) clear && print_header
+        custom_function_menu
         break;;
       Q|q)
         echo -e "${green}###### Happy printing! ######${white}"; echo
