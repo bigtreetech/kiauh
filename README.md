@@ -29,21 +29,11 @@ After git is installed, use the following commands in the given order to downloa
 ```shell
 cd ~
 
-git clone https://github.com/th33xitus/kiauh.git
+git clone -b lodge --depth 1 https://github.com/EchoHeim/kiauh.git
 
 ./kiauh/kiauh.sh
 ```
 **📢 Disclaimer: Usage of this script happens at your own risk!**
-
-
-## **❗ Notes:**
-
-**📋 Please see the [Changelog](docs/changelog.md) for possible important changes!**
-
-- Tested **only** on Raspberry Pi OS Lite (Debian 10 Buster)
-    - Other Debian based distributions can work
-    - Reported to work on Armbian too
-- During the use of this script you might be asked for your sudo password. There are several functions involved which need sudo privileges.
 
 ## **🌐 Sources & Further Information**
 
@@ -96,8 +86,10 @@ git clone https://github.com/th33xitus/kiauh.git
 </tr>
 </table>
 
-## **Credits**
+---
 
-* A big thank you to [lixxbox](https://github.com/lixxbox) for that awesome KIAUH-Logo!
-* Also a big thank you to everyone who supported my work with a [Ko-fi](https://ko-fi.com/th33xitus) !
-* Last but not least: Thank you to all contributors and members of the Klipper Community who like and share this project!
+## 💖 lodge branch functions
+
+- New custom menu
+
+> The specific instructions can be found [here](https://shilong.js.org/#/blog/ToolBox/Klipper%E5%AE%89%E8%A3%85).

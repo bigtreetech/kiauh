@@ -478,10 +478,10 @@ function set_custom_hostname() {
 }
 
 function change_hostname() {
-    local new_hostname regex="^[^\-\_]+([0-9a-z]\-{0,1})+[^\-\_]+$"
+    local new_hostname regex="^[^\-\_]+([0-9a-zA-Z]\-{0,1})+[^\-\_]+$"
     echo
     top_border
-    echo -e "|  ${green}Allowed characters: a-z, 0-9 and single '-'${white}          |"
+    echo -e "|  ${green}Allowed characters: A-Z, a-z, 0-9 and single '-'${white}     |"
     echo -e "|  ${red}No special characters allowed!${white}                       |"
     echo -e "|  ${red}No leading or trailing '-' allowed!${white}                  |"
     bottom_border
@@ -514,6 +514,24 @@ function change_hostname() {
     done
 }
 
+function set_hostname_Env() {
+  local new_hostname=${1}
+  local current_hostname=`hostname`
+
+  local f_os_info="/etc/os-release"
+  local f_board_info="/etc/board-release"
+
+  [[ -f ${f_os_info} ]] && sudo sed -i "s/"${current_hostname}"/"${new_hostname}"/" ${f_os_info}
+  [[ -f ${f_board_info} ]] && sudo sed -i "s/"${current_hostname}"/"${new_hostname}"/" ${f_board_info}
+
+  #write new hostname to /etc/hosts
+  status_msg "Writing new hostname to /etc/hosts ..."
+  sudo sed -i "s/"${current_hostname}"/"${new_hostname}"/" /etc/hosts
+  # echo "127.0.0.1       ${new_hostname}" | sudo tee -a /etc/hosts &>/dev/null
+  ok_msg "New hostname successfully configured!"
+  ok_msg "Remember to reboot for the changes to take effect!"
+}
+
 function set_hostname() {
   local new_hostname=${1} current_date
   #check for dependencies
@@ -531,16 +549,12 @@ function set_hostname() {
     sudo touch /etc/hosts
   fi
 
+  set_hostname_Env ${new_hostname}
+
   #set new hostname in /etc/hostname
   status_msg "Setting hostname to '${new_hostname}' ..."
   status_msg "Please wait ..."
   sudo hostnamectl set-hostname "${new_hostname}"
-
-  #write new hostname to /etc/hosts
-  status_msg "Writing new hostname to /etc/hosts ..."
-  echo "127.0.0.1       ${new_hostname}" | sudo tee -a /etc/hosts &>/dev/null
-  ok_msg "New hostname successfully configured!"
-  ok_msg "Remember to reboot for the changes to take effect!"
 }
 
 #================================================#

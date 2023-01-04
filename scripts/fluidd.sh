@@ -136,7 +136,14 @@ function download_fluidd_macros() {
       if [[ ! -f "${path}/fluidd.cfg" ]]; then
         status_msg "Downloading fluidd.cfg to ${path} ..."
         log_info "downloading fluidd.cfg to: ${path}"
-        wget "${fluidd_cfg}" -O "${path}/fluidd.cfg"
+        if wget "${fluidd_cfg}" -O "${path}/fluidd.cfg"; then
+          ok_msg "Download complete!"
+        else
+          status_msg "Downloading fluidd.cfg failed!"
+          rm "${path}/fluidd.cfg" -f
+          cp ${KIAUH_SRCDIR}/resources/fluidd.cfg ${path}/fluidd.cfg
+          ok_msg "Copy archive fluidd.cfg complete!"
+        fi
 
         ### replace user 'pi' with current username to prevent issues in cases where the user is not called 'pi'
         log_info "modify fluidd.cfg"
@@ -170,14 +177,16 @@ function download_fluidd() {
 
   if wget "${url}"; then
     ok_msg "Download complete!"
-    status_msg "Extracting archive ..."
-    unzip -q -o ./*.zip && ok_msg "Done!"
-    status_msg "Remove downloaded archive ..."
-    rm -rf ./*.zip && ok_msg "Done!"
   else
-    print_error "Downloading Fluidd from\n ${url}\n failed!"
-    exit 1
+    status_msg "Downloading Fluidd from url failed!"
+    cp ${KIAUH_SRCDIR}/resources/fluidd.zip ./
+    ok_msg "Copy archive fluidd.zip complete!"
   fi
+
+  status_msg "Extracting archive ..."
+  unzip -q -o ./*.zip && ok_msg "Done!"
+  status_msg "Remove downloaded archive ..."
+  rm -rf ./*.zip && ok_msg "Done!"
 }
 
 #===================================================#
@@ -437,11 +446,10 @@ path: ~/fluidd
 MOONRAKER_CONF
 
     fi
-
-    patched="true"
+        patched="true"
   done
 
   if [[ ${patched} == "true" ]]; then
-    do_action_service "restart" "moonraker"
+        do_action_service "restart" "moonraker"
   fi
 }

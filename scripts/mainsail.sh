@@ -39,29 +39,53 @@ function install_mainsail() {
   ### check if another site already listens to port 80
   mainsail_port_check
 
-#  ### ask user to install mjpg-streamer
-#  local install_mjpg_streamer
-#  if [[ ! -f "${SYSTEMD}/webcamd.service" ]]; then
-#    while true; do
-#      echo
-#      top_border
-#      echo -e "| Install MJPG-Streamer for webcam support?             |"
-#      bottom_border
-#      read -p "${cyan}###### Please select (y/N):${white} " yn
-#      case "${yn}" in
-#        Y|y|Yes|yes)
-#          select_msg "Yes"
-#          install_mjpg_streamer="true"
-#          break;;
-#        N|n|No|no|"")
-#          select_msg "No"
-#          install_mjpg_streamer="false"
-#          break;;
-#        *)
-#          error_msg "Invalid command!";;
-#      esac
-#    done
-#  fi
+  ### ask user to install mjpg-streamer
+  local install_mjpg_streamer
+  if [[ ! -f "${SYSTEMD}/webcamd.service" ]]; then
+  while true; do
+    echo
+    top_border
+    echo -e "| Install MJPG-Streamer for webcam support?             |"
+    bottom_border
+    read -p "${cyan}###### Please select (y/N):${white} " yn
+      case "${yn}" in
+      Y|y|Yes|yes)
+        select_msg "Yes"
+        install_mjpg_streamer="true"
+        break;;
+      N|n|No|no|"")
+        select_msg "No"
+        install_mjpg_streamer="false"
+        break;;
+      *)
+        error_msg "Invalid command!";;
+      esac
+    done
+  fi
+
+  ### ask user to install Crowsnest
+  local install_Crowsnest
+  if [[ ! -f "${SYSTEMD}/crowsnest.service" ]]; then
+    while true; do
+      echo
+      top_border
+      echo -e "| Install Crowsnest for webcam support?                 |"
+      bottom_border
+      read -p "${cyan}###### Please select (y/N):${white} " yn
+      case "${yn}" in
+        Y|y|Yes|yes)
+          select_msg "Yes"
+          install_Crowsnest="true"
+          break;;
+        N|n|No|no|"")
+          select_msg "No"
+          install_Crowsnest="false"
+          break;;
+        *)
+          error_msg "Invalid command!";;
+      esac
+    done
+  fi
 
   ### download mainsail
   download_mainsail
@@ -84,6 +108,9 @@ function install_mainsail() {
 
   ### install mjpg-streamer
 #  [[ ${install_mjpg_streamer} == "true" ]] && install_mjpg-streamer
+
+  ### install Crowsnest
+  [[ ${install_Crowsnest} == "true" ]] && install_Crowsnest
 
   fetch_webui_ports #WIP
 
@@ -136,8 +163,16 @@ function download_mainsail_macros() {
       if [[ ! -f "${path}/mainsail.cfg" ]]; then
         status_msg "Downloading mainsail.cfg to ${path} ..."
         log_info "downloading mainsail.cfg to: ${path}"
-        wget "${ms_cfg}" -O "${path}/mainsail.cfg"
-
+        
+        if wget "${ms_cfg}" -O "${path}/mainsail.cfg"; then
+          ok_msg "Download complete!"
+        else
+          status_msg "Downloading mainsail.cfg failed!"
+          rm "${path}/mainsail.cfg" -f
+          cp ${KIAUH_SRCDIR}/resources/mainsail.cfg ${path}/mainsail.cfg
+          ok_msg "Copy archive mainsail.cfg complete!"
+        fi
+        
         ### replace user 'pi' with current username to prevent issues in cases where the user is not called 'pi'
         log_info "modify mainsail.cfg"
         sed -i "/^path: \/home\/pi\/gcode_files/ s/\/home\/pi/\/home\/${USER}/" "${path}/mainsail.cfg"
@@ -170,14 +205,16 @@ function download_mainsail() {
 
   if wget "${url}"; then
     ok_msg "Download complete!"
-    status_msg "Extracting archive ..."
-    unzip -q -o ./*.zip && ok_msg "Done!"
-    status_msg "Remove downloaded archive ..."
-    rm -rf ./*.zip && ok_msg "Done!"
   else
     print_error "Downloading Mainsail from\n ${url}\n failed!"
-    exit 1
+    cp ${KIAUH_SRCDIR}/resources/mainsail.zip ./
+    ok_msg "Copy archive mainsail.zip complete!"
   fi
+
+  status_msg "Extracting archive ..."
+  unzip -q -o ./*.zip && ok_msg "Done!"
+  status_msg "Remove downloaded archive ..."
+  rm -rf ./*.zip && ok_msg "Done!"
 
   ### check for moonraker multi-instance and if multi-instance was found, enable mainsails remoteMode
   if [[ $(moonraker_systemd | wc -w) -gt 1 ]]; then
@@ -462,7 +499,7 @@ function ms_theme_delete() {
 
   regex="\/home\/${USER}\/([A-Za-z0-9_]+)\/config\/\.theme"
   theme_folders=$(find "${HOME}" -maxdepth 3 -type d -regextype posix-extended -regex "${regex}" | sort)
-#  theme_folders=$(find "${KLIPPER_CONFIG}" -mindepth 1 -type d -name ".theme" | sort)
+ #  theme_folders=$(find "${cfg_dir}" -mindepth 1 -type d -name ".theme" | sort)
 
   ### build target folder array
   for folder in ${theme_folders}; do

@@ -1,0 +1,56 @@
+.v-toolbar__content {
+    color: #ffffff;
+    background: #0a0d22;
+}
+
+.v-icon__svg {
+    color: #ffffff;
+}
+
+.v-list-item__content {
+    color: #ffffff;
+}
+
+.v-application .panel {
+    background-color: #20274f !important;
+}
+
+.theme--dark.v-card {
+    background-color: #20274f;
+}
+
+.theme--dark.v-list {
+    background: #20274f;
+}
+
+.theme--dark.v-data-table {
+    background: #101324;
+}
+
+.v-data-table>.v-data-table__wrapper>table {
+    background-color: #20274f;
+}
+
+.v-tab.v-tab {
+    background: #0c1239;
+}
+
+.theme--dark.v-btn.v-btn--has-bg {
+    background-color: #101324;
+}
+
+.v-application .grey.darken-3 {
+    background-color: #101324!important;
+}
+
+.theme--dark.v-data-table .v-data-footer {
+    background: #20274f;
+}
+
+.v-card__subtitle, .v-card__text {
+    background: #20274f;
+}
+
+.theme--dark.v-text-field fieldset, .theme--dark.v-text-field .theme--dark.v-input__control, .theme--dark.v-text-field .theme--dark.v-input__slot  {
+    background: #20274f!important;
+}

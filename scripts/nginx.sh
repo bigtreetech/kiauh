@@ -355,6 +355,5 @@ function detect_enabled_sites() {
   if [[ -e "/etc/nginx/sites-enabled/fluidd" ]]; then
     SITE_ENABLED="true" && FLUIDD_ENABLED="true"
     FLUIDD_PORT=$(read_listen_port "fluidd")
-
   fi
 }

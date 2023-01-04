@@ -50,12 +50,12 @@ function kiauh_update_avail() {
 
   cd "${KIAUH_SRCDIR}"
 
-  ### abort if not on master branch
-  ! git branch -a | grep -q "\* master" && return
+  ### abort if not on lodge branch
+  ! git branch -a | grep -q "\* lodge" && return
 
   ### compare commit hash
   git fetch -q
-  origin=$(git rev-parse --short=8 origin/master)
+  origin=$(git rev-parse --short=8 origin/lodge)
   head=$(git rev-parse --short=8 HEAD)
 
   if [[ ${origin} != "${head}" ]]; then

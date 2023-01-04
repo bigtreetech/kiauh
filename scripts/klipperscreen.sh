@@ -43,6 +43,12 @@ function install_klipperscreen() {
 
 function klipperscreen_setup() {
   local dep=(wget curl unzip dfu-util)
+  local conf_template="${KIAUH_SRCDIR}/resources/KlipperScreen.conf"
+
+  local printer_data="${HOME}/printer_data"
+  local cfg_dir="${printer_data}/config"
+  local cfg="${printer_data}/config/KlipperScreen.conf"
+
   dependency_check "${dep[@]}"
   status_msg "Cloning KlipperScreen from ${KLIPPERSCREEN_REPO} ..."
 
@@ -63,6 +69,10 @@ function klipperscreen_setup() {
     print_error "KlipperScreen installation failed!"
     exit 1
   fi
+
+  status_msg "Creating KlipperScreen.conf in ${cfg_dir} ..."
+  cp "${conf_template}" "${cfg}"
+  ok_msg "KlipperScreen.conf successfully Created!"
 }
 
 #===================================================#
@@ -101,10 +111,18 @@ function remove_klipperscreen() {
     rm -f "/tmp/KlipperScreen.log" && ok_msg "File removed!"
   fi
 
+  ### remove KlipperScreen cfg
+  local cfg_dir="${HOME}/printer_data/config"
+
+  if [[ -e "${cfg_dir}/KlipperScreen.conf" ]]; then
+    status_msg "Removing KlipperScreen cfg file ..."
+    rm -f "${cfg_dir}/KlipperScreen.conf" && ok_msg "File removed!"
+  fi
+
   ### remove KlipperScreen log symlink in config dir
-  if [[ -e "${KLIPPER_CONFIG}/KlipperScreen.log" ]]; then
+  if [[ -e "${cfg_dir}/KlipperScreen.log" ]]; then
     status_msg "Removing KlipperScreen log symlink ..."
-    rm -f "${KLIPPER_CONFIG}/KlipperScreen.log" && ok_msg "File removed!"
+    rm -f "${cfg_dir}/KlipperScreen.log" && ok_msg "File removed!"
   fi
 
   print_confirm "KlipperScreen successfully removed!"
@@ -202,9 +220,13 @@ function compare_klipperscreen_versions() {
 #================================================#
 
 function patch_klipperscreen_update_manager() {
+  local printer_data="${HOME}/printer_data"
+  local cfg_dir="${printer_data}/config"
+  local log_dir="${printer_data}/logs"
+
   local patched="false"
   local moonraker_configs
-  moonraker_configs=$(find "${KLIPPER_CONFIG}" -type f -name "moonraker.conf" | sort)
+  moonraker_configs=$(find "${cfg_dir}" -type f -name "moonraker.conf" | sort)
 
   for conf in ${moonraker_configs}; do
     if ! grep -Eq "^\[update_manager KlipperScreen\]\s*$" "${conf}"; then

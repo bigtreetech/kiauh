@@ -78,15 +78,15 @@ function install_mjpg-streamer() {
 EOT
 
   sudo cp "${webcamd}" "/usr/local/bin/webcamd"
-  sudo sed -i "/^config_dir=/ s|=.*|=${KLIPPER_CONFIG}|" /usr/local/bin/webcamd
+  sudo sed -i "/^config_dir=/ s|=.*|=${cfg_dir}|" /usr/local/bin/webcamd
   sudo sed -i "/MJPGSTREAMER_HOME/ s/pi/${USER}/" /usr/local/bin/webcamd
   sudo chmod +x /usr/local/bin/webcamd
 
   ### step 4: create webcam.txt config file
-  [[ ! -d ${KLIPPER_CONFIG} ]] && mkdir -p "${KLIPPER_CONFIG}"
-  if [[ ! -f "${KLIPPER_CONFIG}/webcam.txt" ]]; then
+  [[ ! -d ${cfg_dir} ]] && mkdir -p "${cfg_dir}"
+  if [[ ! -f "${cfg_dir}/webcam.txt" ]]; then
     status_msg "Creating webcam.txt config file ..."
-    cp "${webcam_txt}" "${KLIPPER_CONFIG}/webcam.txt"
+    cp "${webcam_txt}" "${cfg_dir}/webcam.txt"
     ok_msg "Done!"
   fi
 

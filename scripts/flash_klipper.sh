@@ -12,106 +12,106 @@
 set -e
 
 function init_flash_process() {
-  ### step 1: check for required userhgroups (tty & dialout)
-  check_usergroups
+    ### step 1: check for required userhgroups (tty & dialout)
+    check_usergroups
 
-  top_border
-  echo -e "|        ~~~~~~~~~~~~ [ Flash MCU ] ~~~~~~~~~~~~        |"
-  hr
-  echo -e "| Please select the flashing method to flash your MCU.  |"
-  echo -e "| Make sure to only select a method your MCU supports.  |"
-  echo -e "| Not all MCUs support both methods!                    |"
-  hr
-  blank_line
-  echo -e "| 1) Regular flashing method                            |"
-  echo -e "| 2) Updating via SD-Card Update                        |"
-  blank_line
-  back_help_footer
+    top_border
+    echo -e "|        ~~~~~~~~~~~~ [ Flash MCU ] ~~~~~~~~~~~~        |"
+    hr
+    echo -e "| Please select the flashing method to flash your MCU.  |"
+    echo -e "| Make sure to only select a method your MCU supports.  |"
+    echo -e "| Not all MCUs support both methods!                    |"
+    hr
+    blank_line
+    echo -e "| 1) Regular flashing method                            |"
+    echo -e "| 2) Updating via SD-Card Update                        |"
+    blank_line
+    back_help_footer
 
-  local choice method
-  while true; do
-    read -p "${cyan}###### Please select:${white} " choice
-    case "${choice}" in
-      1)
-        select_msg "Regular flashing method"
-        method="regular"
-        break;;
-      2)
-        select_msg "SD-Card Update"
-        method="sdcard"
-        break;;
-      B|b)
-        advanced_menu
-        break;;
-      H|h)
-        clear && print_header
-        show_flash_method_help
-        break;;
-      *)
-        error_msg "Invalid command!";;
-    esac
-  done
+    local choice method
+    while true; do
+        read -p "${cyan}###### Please select:${white} " choice
+        case "${choice}" in
+            1)
+                select_msg "Regular flashing method"
+                method="regular"
+                break;;
+            2)
+                select_msg "SD-Card Update"
+                method="sdcard"
+                break;;
+            B|b)
+                advanced_menu
+                break;;
+            H|h)
+                clear && print_header
+                show_flash_method_help
+                break;;
+            *)
+                error_msg "Invalid command!";;
+        esac
+    done
 
-  ### step 2: select how the mcu is connected to the host
-  select_mcu_connection
+    ### step 2: select how the mcu is connected to the host
+    select_mcu_connection
 
-  ### step 3: select which detected mcu should be flashed
-  select_mcu_id "${method}"
+    ### step 3: select which detected mcu should be flashed
+    select_mcu_id "${method}"
 }
 
 #================================================#
 #=================== STEP 2 =====================#
 #================================================#
 function select_mcu_connection() {
-  top_border
-  echo -e "| ${yellow}Make sure that the controller board is connected now!${white} |"
-  hr
-  blank_line
-  echo -e "| How is the controller board connected to the host?    |"
-  echo -e "| 1) USB                                                |"
-  echo -e "| 2) UART                                               |"
-  blank_line
-  back_help_footer
+    top_border
+    echo -e "| ${yellow}Make sure that the controller board is connected now!${white} |"
+    hr
+    blank_line
+    echo -e "| How is the controller board connected to the host?    |"
+    echo -e "| 1) USB                                                |"
+    echo -e "| 2) UART                                               |"
+    blank_line
+    back_help_footer
 
-  local choice
-  while true; do
-    read -p "${cyan}###### Connection method:${white} " choice
-    case "${choice}" in
-      1)
-        status_msg "Identifying MCU connected via USB ...\n"
-        get_usb_id || true # continue even after exit code 1
-        break;;
-      2)
-        status_msg "Identifying MCU possibly connected via UART ...\n"
-        get_uart_id || true # continue even after exit code 1
-        break;;
-      B|b)
-        advanced_menu
-        break;;
-      H|h)
-        clear && print_header
-        show_mcu_connection_help
-        break;;
-      *)
-        error_msg "Invalid command!";;
-    esac
-  done
+    local choice
+    while true; do
+        read -p "${cyan}###### Connection method:${white} " choice
+        case "${choice}" in
+            1)
+                status_msg "Identifying MCU connected via USB ...\n"
+                get_usb_id || true # continue even after exit code 1
+                break;;
+            2)
+                status_msg "Identifying MCU possibly connected via UART ...\n"
+                get_uart_id || true # continue even after exit code 1
+                break;;
+            B|b)
+                advanced_menu
+                break;;
+            H|h)
+                clear && print_header
+                show_mcu_connection_help
+                break;;
+            *)
+                error_msg "Invalid command!";;
+        esac
+    done
 }
 
 function print_detected_mcu_to_screen() {
-  local i=1
+    local i=1
 
-  if (( ${#mcu_list[@]} < 1 )); then
-    print_error "No MCU found!\n MCU either not connected or not detected!"
-    return
-  fi
+    if (( ${#mcu_list[@]} < 1 )); then
+        print_error "No MCU found!\n MCU either not connected or not detected!"
+        return
+    fi
 
-  for mcu in "${mcu_list[@]}"; do
-    mcu=$(echo "${mcu}" | rev | cut -d"/" -f1 | rev)
-    echo -e " ● MCU #${i}: ${cyan}${mcu}${white}"
-    i=$(( i + 1 ))
-  done
-  echo
+    for mcu in "${mcu_list[@]}"; do
+        mcu=$(echo "${mcu}" | rev | cut -d"/" -f1 | rev)
+        echo -e " ● MCU #${i}: ${cyan}${mcu}${white}"
+        i=$(( i + 1 ))
+    done
+    echo
 }
 
 #================================================#

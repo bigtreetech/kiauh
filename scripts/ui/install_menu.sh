@@ -12,24 +12,25 @@
 set -e
 
 function install_ui() {
-  top_border
-  echo -e "|     ${green}~~~~~~~~~~~ [ Installation Menu ] ~~~~~~~~~~~${white}     |"
-  hr
-  echo -e "|  You need this menu usually only for installing       |"
-  echo -e "|  all necessary dependencies for the various           |"
-  echo -e "|  functions on a completely fresh system.              |"
-  hr
-  echo -e "| Firmware & API:          | 3rd Party Webinterface:    |"
-  echo -e "|  1) [Klipper]            |  6) [OctoPrint]            |"
-  echo -e "|  2) [Moonraker]          |                            |"
-  echo -e "|                          | Other:                     |"
-  echo -e "| Klipper Webinterface:    |  7) [PrettyGCode]          |"
-  echo -e "|  3) [Mainsail]           |  8) [Telegram Bot]         |"
-  echo -e "|  4) [Fluidd]             |  9) $(obico_install_title) |"
-  echo -e "|                          |                            |"
-  echo -e "| Touchscreen GUI:         | Webcam Streamer:           |"
-  echo -e "|  5) [KlipperScreen]      | 10) [MJPG-Streamer]        |"
-  back_footer
+    top_border
+    echo -e "|     ${green}~~~~~~~~~~~ [ Installation Menu ] ~~~~~~~~~~~${white}     |"
+    hr
+    echo -e "|  You need this menu usually only for installing       |"
+    echo -e "|  all necessary dependencies for the various           |"
+    echo -e "|  functions on a completely fresh system.              |"
+    hr
+    echo -e "| Firmware & API:          | 3rd Party Webinterface:    |"
+    echo -e "|  1) [Klipper]            |  6) [OctoPrint]            |"
+    echo -e "|  2) [Moonraker]          |                            |"
+    echo -e "|                          | Other:                     |"
+    echo -e "| Klipper Webinterface:    |  7) [PrettyGCode]          |"
+    echo -e "|  3) [Mainsail]           |  8) [Telegram Bot]         |"
+    echo -e "|  4) [Fluidd]             |  9) $(obico_install_title) |"
+    echo -e "|                          |                            |"
+    echo -e "| Touchscreen GUI:         | Webcam Streamer:           |"
+    echo -e "|  5) [KlipperScreen]      | 10) [MJPG-Streamer]        |"
+    echo -e "|                          | 11) [Crowsnest]            |"
+    back_footer
 }
 
 function install_menu() {
@@ -38,7 +39,6 @@ function install_menu() {
 
   ### save all installed webinterface ports to the ini file
   fetch_webui_ports
-
   ### save all klipper multi-instance names to the ini file
   set_multi_instance_names
 
@@ -65,10 +65,9 @@ function install_menu() {
       9)
         do_action "moonraker_obico_setup_dialog" "install_ui";;
       10)
-        #do_action "install_mjpg-streamer" "install_ui";;
-        clear && print_header
-        print_error "Function currently disabled! Sorry!"
-        install_ui;;
+        do_action "install_mjpg-streamer" "install_ui";;
+      11)
+        do_action "install_Crowsnest" "install_ui";;
       B|b)
         clear; main_menu; break;;
       *)

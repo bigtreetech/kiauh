@@ -92,9 +92,9 @@ function change_klipper_repo_menu() {
     else
       error_msg "Invalid command!"
     fi
-  done
 
-  change_klipper_repo_menu
+    change_klipper_repo_menu
+  done
 }
 
 #================================================#
